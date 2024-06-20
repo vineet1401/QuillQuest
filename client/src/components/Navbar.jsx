@@ -4,7 +4,6 @@ import {
   DisclosurePanel,
   Menu,
   MenuButton,
-  MenuItem,
   MenuItems,
   Transition,
 } from "@headlessui/react";
@@ -15,29 +14,61 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigation } from "react-router-dom";
 import { toggleTheme } from "../store/themeSlice/themeSlice";
-
-const user = {
-  name: "Tom Cook",
-  email: "tom@example.com",
-  imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-};
-const navigation = [
-  { name: "Home", to: "/" },
-  { name: "Podcast", to: "/podcast" },
-  { name: "Blog", to: "/blog/all" },
-];
-const userNavigation = [
-  { name: "Dashboard", to: "/dashboard" },
-  { name: "Your Profile", to: "/profile" },
-  { name: "Sign out", t0: "/sign-out" },
-];
+import { useEffect, useState } from "react";
+import axios from "axios";
+import usebaseUrl from "../hooks/usebaseUrl";
+import { removeUserInfo, setUserInfo } from "../store/userSlice/userSlice";
+import { toast } from "react-toastify";
+import Profile from "../pages/profile";
 
 export default function Navbar() {
   const darkMode = useSelector((state) => state.theme.darkMode);
+  const userInfo = useSelector((state) => state.user.userInfo);
   const dispatch = useDispatch();
+  const navigate = useNavigation();
+
+  const [profileModal, toggleProfileModal] = useState(false);
+
+  // console.log("userInfoo", userInfo)
+  const logoutHandler = async () => {
+    const response = await axios.request({
+      method: "GET",
+      url: `${usebaseUrl()}/api/auth/logout`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("validationToken")}`,
+      },
+    });
+    localStorage.removeItem("validationToken");
+    dispatch(removeUserInfo());
+    toast.success(response.data.message);
+    navigate("/");
+  };
+
+  const navigation = [
+    { name: "Home", to: "/" },
+    { name: "Podcast", to: "/podcast" },
+    { name: "Blog", to: "/blog/all" },
+  ];
+
+
+  useEffect(() => {
+    const getUserData = async () => {
+      const response = await axios.request({
+        method: "GET",
+        url: `${usebaseUrl()}/api/user/get-user-data`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("validationToken")}`,
+        },
+      });
+      if (response.data.success) {
+        dispatch(setUserInfo(response.data.data));
+      }
+    };
+    localStorage.getItem("validationToken") && getUserData();
+  }, []);
+
   return (
     <Disclosure as="nav" className="dark:bg-slate-900 bg-white sticky w-full">
       {({ open }) => (
@@ -86,44 +117,75 @@ export default function Navbar() {
                   </button>
 
                   {/* Profile dropdown */}
-                  <Menu as="div" className="relative ml-3">
-                    <MenuButton className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm   ring-2 ring-offset-2 ring-offset-gray-800">
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src={user.imageUrl}
-                        alt=""
-                      />
-                    </MenuButton>
-
-                    <Transition
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {userNavigation.map((item) => (
-                          <NavLink
-                            key={item.name}
-                            to={item.to}
-                            className={
-                              "block text-gray-900 hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                  {userInfo._id ? (
+                    <>
+                      <Menu as="div" className="relative ml-3">
+                        <MenuButton className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm   ring-2 ring-offset-2 ring-offset-gray-800">
+                          <img
+                            className="h-8 w-8 rounded-full"
+                            src={
+                              userInfo.imageUrl ||
+                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSheI9UkWllIpSNbs2UdE18KLLswgDON9qzXg&s"
                             }
-                            aria-current={item.current ? "page" : undefined}
-                          >
-                            {item.name}
-                          </NavLink>
-                        ))}
-                      </MenuItems>
-                    </Transition>
-                  </Menu>
+                            alt=""
+                          />
+                        </MenuButton>
+
+                        <Transition
+                          enter="transition ease-out duration-100"
+                          enterFrom="transform opacity-0 scale-95"
+                          enterTo="transform opacity-100 scale-100"
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
+                        >
+                          <MenuItems className="absolute right-0 z-30 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <NavLink
+                                key="Dashboard"
+                                to={"/dashboard"}
+                                className={
+                                  "block text-gray-900 w-full hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                                }
+                              >
+                                Dashboard
+                              </NavLink>
+                              <button
+                                key="Profile"
+                                className={
+                                  "block text-gray-900 w-full text-left hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                                }
+                                onClick={() => toggleProfileModal(true)}
+                              >
+                                Profile
+                              </button>
+                            <button
+                              className={
+                                "block text-gray-900 w-full text-left hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                              }
+                              onClick={logoutHandler}
+                            >
+                              Logout
+                            </button>
+
+                          </MenuItems>
+                        </Transition>
+                      </Menu>
+                    </>
+                  ) : (
+                    <NavLink
+                      className={
+                        "bg-indigo-800 mx-3 text-white rounded-md px-3 py-2 text-sm font-medium"
+                      }
+                      to ="/login"
+                    >
+                      Login
+                    </NavLink>
+                  )}
                 </div>
               </div>
               <div className="-mr-2 flex md:hidden">
                 {/* Mobile menu button */}
-                <DisclosureButton className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-800 hover:bg-indigo-400 hover:text-white ">
+                <DisclosureButton className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-800 dark:text-gray-100 hover:bg-indigo-400 hover:text-white ">
                   {open ? (
                     <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                   ) : (
@@ -134,14 +196,14 @@ export default function Navbar() {
             </div>
           </div>
 
-          <DisclosurePanel className="md:hidden">
+          <DisclosurePanel className="md:hidden  text-right">
             <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
               {navigation.map((item) => (
                 <NavLink
                   key={item.name}
                   to={item.to}
                   className={
-                    "block text-gray-900 hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                    "block text-gray-900 dark:text-white hover:bg-indigo-400 dark:hover:bg-indigo-100 hover:text-white dark:hover:text-gray-900 rounded-md px-3 py-2 text-sm font-medium"
                   }
                   aria-current={item.current ? "page" : undefined}
                 >
@@ -149,51 +211,73 @@ export default function Navbar() {
                 </NavLink>
               ))}
             </div>
-            <div className="border-t border-gray-700 pb-3 pt-4">
-              <div className="flex items-center px-5">
-                <div className="flex-shrink-0">
-                  <img
-                    className="h-10 w-10 rounded-full"
-                    src={user.imageUrl}
-                    alt=""
-                  />
-                </div>
-                <div className="ml-3">
-                  <div className="text-base font-medium leading-none text-black">
-                    {user.name}
-                  </div>
-                  <div className="text-sm font-medium leading-none text-black">
-                    {user.email}
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className="relative ml-auto flex-shrink-0 rounded-full  p-1  text-gray-900 dark:bg-gray-900 ring-2 dark:text-white ring-gray-900 dark:ring-white dark:ring-offset-gray-100 ring-offset-gray-800"
-                  onClick={() => dispatch(toggleTheme(!darkMode))}
-                >
-                  {darkMode ? (
-                    <MoonIcon className="h-6 w-6" aria-hidden="true" />
+            {userInfo._id ? (
+                    <>
+                      <Menu as="div" className="relative mr-3">
+                        <MenuButton className="relative max-w-xs items-center rounded-full bg-gray-800 text-sm   ring-2 ring-offset-2 ring-offset-gray-800">
+                          <img
+                            className="h-8 w-8 rounded-full"
+                            src={
+                              userInfo.imageUrl ||
+                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSheI9UkWllIpSNbs2UdE18KLLswgDON9qzXg&s"
+                            }
+                            alt=""
+                          />
+                        </MenuButton>
+
+                        <Transition
+                          enter="transition ease-out duration-100"
+                          enterFrom="transform opacity-0 scale-95"
+                          enterTo="transform opacity-100 scale-100"
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
+                        >
+                          <MenuItems className="absolute right-0 z-30 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                              <NavLink
+                                key="Dashboard"
+                                to={"/dashboard"}
+                                className={
+                                  "block text-gray-900 w-full hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                                }
+                              >
+                                Dashboard
+                              </NavLink>
+                              <button
+                                key="Profile"
+                                className={
+                                  "block text-gray-900 w-full text-right hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                                }
+                                onClick={() => toggleProfileModal(true)}
+                              >
+                                Profile
+                              </button>
+                            <button
+                              className={
+                                "block text-gray-900 w-full text-right hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                              }
+                              onClick={logoutHandler}
+                            >
+                              Logout
+                            </button>
+                          </MenuItems>
+                        </Transition>
+                      </Menu>
+                    </>
                   ) : (
-                    <SunIcon className="h-6 w-6" aria-hidden="true" />
+                    <NavLink
+                      className={
+                        "bg-indigo-800 mx-3 text-white rounded-md px-3 py-2 text-sm font-medium"
+                      }
+                      to ="/login"
+                    >
+                      Login
+                    </NavLink>
                   )}
-                </button>
-              </div>
-              <div className="mt-3 space-y-1 px-2">
-                {userNavigation.map((item) => (
-                  <NavLink
-                    key={item.name}
-                    to={item.to}
-                    className={
-                      "block text-gray-900 hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                    }
-                    aria-current={item.current ? "page" : undefined}
-                  >
-                    {item.name}
-                  </NavLink>
-                ))}
-              </div>
-            </div>
+
           </DisclosurePanel>
+
+          < Profile profileModal={profileModal} toggleProfileModal={toggleProfileModal} />
         </>
       )}
     </Disclosure>

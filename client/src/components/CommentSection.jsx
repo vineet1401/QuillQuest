@@ -1,3 +1,4 @@
+import { HeartIcon } from "@heroicons/react/20/solid";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import React from "react";
 
@@ -8,6 +9,10 @@ const CommectSection = () => {
         <h2 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
           Discussion (20)
         </h2>
+        <div className="inline-flex items-center p-2 ">
+            <HeartIcon height={36} className="mx-2  text-red-500  bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600" />
+            <p className="px-2 py-1 bg-indigo-600 rounded-xl dark:text-black text-white font-bold">Subscribe</p>
+          </div>
       </div>
       <form className="mb-6 ">
         <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">

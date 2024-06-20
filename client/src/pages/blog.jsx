@@ -2,6 +2,8 @@
 import { useParams } from "react-router-dom";
 import CategoryBar from "../components/CategoryBar";
 import ContentDiv from "../components/ContentDiv";
+import Pagination from "../components/Pagination";
+import PublishBlogButton from "../components/PublishBlogButton";
 
 const posts = [
   {
@@ -134,11 +136,12 @@ const Blog = () => {
             {categoryName}
           </h1>
           <img
-            className=" lg:px-2 mx-auto px-2 w-full relative "
+            className=" lg:px-2 mx-auto px-2 w-full "
             src="https://images.unsplash.com/photo-1621155346337-1d19476ba7d6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGltYWdlfGVufDB8fDB8fHww"
             // src="https://demos.creative-tim.com/material-kit-pro/assets/img/examples/blog2.jpg"
             alt=""
           />
+          <PublishBlogButton />
         </div>
         <CategoryBar category={category} />
       </div>
@@ -150,7 +153,9 @@ const Blog = () => {
         <div className=" max-w-7xl mx-auto py-10 px-2 grid grid-cols-1  lg:grid-cols-2 gap-5">
           <ContentDiv posts={posts} />
         </div>
+        <Pagination />
       </section>
+      
     </div>
   );
 };

@@ -5,11 +5,13 @@ import Home from "./pages/home";
 import Podcast from "./pages/podcast";
 import Blog from "./pages/blog";
 import DashBoard from "./pages/dashboard";
-import Profile from "./pages/profile";
 import Footer from "./components/Footer";
 import SingleBlog from "./pages/SingleBlog";
+import LoginForm from "./pages/LoginForm";
+import SignUpForm from "./pages/SignUpForm";
 
 function Layout() {
+  
   return (
     <>
       <Navbar />
@@ -57,8 +59,12 @@ const router = createBrowserRouter([
         element: <DashBoard />,
       },
       {
-        path: "profile",
-        element: <Profile />,
+        path: "login",
+        element: <LoginForm />,
+      },
+      {
+        path: "signup",
+        element: <SignUpForm />,
       },
     ],
   },
