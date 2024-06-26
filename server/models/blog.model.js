@@ -11,14 +11,18 @@ const blogSchema = mongoose.Schema({
     required: true
   },
   date: {
-    type: Date,
-    default: new Date().toLocaleDateString(),
+    type: String,
+    default: new Date().toLocaleString(),
   },
   datetime: {
     type: String,
-    default: new Date.now(),
+    default: new Date().getTime(),
   },
   category: {
+    type: String,
+    required: true
+  },
+  coverPhoto: {
     type: String,
     required: true
   },
@@ -48,7 +52,7 @@ const blogSchema = mongoose.Schema({
       },
       commentDatetime: {
         type: String,
-        default: new Date.now(),
+        default: new Date().getTime(),
       },
       commentText: {
         type: String,

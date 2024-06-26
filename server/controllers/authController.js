@@ -8,7 +8,7 @@ exports.postLogin = async (req, res) => {
 
     // console.log(user);
     if (!user) {
-      return res.status(401).send({ success: false, message: "User not found" })
+      return res.status(400).send({ success: false, message: "User not found" })
     }
     if (user.password !== formData.password) {
       return res.status(401).send({ success: false, message: "Incorrect password" })
@@ -26,10 +26,11 @@ exports.postLogin = async (req, res) => {
 
 exports.postSignup = async (req, res) => {
   const formData = req.body;
+  console.log(formData)
   try {
     const existUser = await UserModel.findOne({ email: formData.email })
     if (existUser) {
-      return res.status(401).send({ success: false, message: "User already Exist" })
+      return res.status(400).send({ success: false, message: "User already Exist" })
     }
     const newUser = await UserModel.create(formData);
     if (!newUser) {

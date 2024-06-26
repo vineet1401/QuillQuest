@@ -1,9 +1,10 @@
 const { isAuthenticated } = require('../middlewares/authMiddleware');
-const { getUserData, postUpdateProfile} = require("../controllers/userController")
+const userController = require("../controllers/userController");
+const { uploadProfile } = require('../utils/multer');
 
 const router = require('express').Router();
 
-router.get("/get-user-data", isAuthenticated, getUserData);
-router.post("/update-profile", isAuthenticated, postUpdateProfile);
+router.get("/get-user-data", isAuthenticated, userController.getUserData);
+router.post("/update-profile", isAuthenticated, uploadProfile.single('imageUrl'), userController.postUpdateProfile);
 
 module.exports = router;

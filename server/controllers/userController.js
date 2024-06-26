@@ -20,12 +20,14 @@ exports.getUserData = async(req, res) => {
 
 exports.postUpdateProfile = async(req, res) => {
   const data = req.body;
+  const image = req.file.filename;
+  console.log(data)
   try {
     const updateUser = await UserModel.findOneAndUpdate(
       {
         _id : req.user
       },
-      data,
+      {...data, imageUrl : image  },
       {
         new: true
       }
@@ -96,31 +98,3 @@ exports.unsubscribeUser = async(req, res) => {
   }
 }
 
-exports.likeBlog = async(req, res) => {
-  const { blogId } = req.params
-  const userId = req.body;
-
-
-  try {
-    const isLikedBefore = BlogModel.findOne({$in})
-    const like = await UserModel.findOneAndUpdate(
-      {
-        _id : blogId,
-      },
-      {
-        $push : {likes : userId}
-      },
-      {
-        new:true
-      }
-    )
-    if(!subscribe){
-      return res.status(400).send({success: false, message:"Unsubscribe unsccesfull"})
-    }
-    return res.status(200).send({success:true, message:"Unsubscribe Successfull"})
-    return
-  } catch (error) {
-    console.log("erron in userController -> unubscribeUser", error)
-    return res.status(500).send({success:false, message:"Please try again"})
-  }
-}

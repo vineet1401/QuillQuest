@@ -5,11 +5,13 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const env = require('dotenv').config();
 const cookieParser = require('cookie-parser');
+const multer = require("multer");
 
 
 const MONGODB_URI = "mongodb://127.0.0.1:27017/QuillQuest"
 const authRoute = require("./routes/authRoutes");
 const userRoute = require("./routes/userRoutes");
+const blogRoute = require("./routes/blogRoutes");
 
 
 
@@ -29,6 +31,7 @@ app.use(cookieParser())
 
 app.use("/api/auth", authRoute)
 app.use("/api/user", userRoute)
+app.use("/api/blog", blogRoute)
 
 app.get("/", function (req, res) {
   res.send("hello")
