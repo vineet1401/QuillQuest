@@ -13,6 +13,8 @@ const SignUpForm = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    userName: "",
+    fullName: "",
   });
   const handleEditChange = (e) => {
     const { name, value } = e.target;
@@ -50,13 +52,15 @@ const SignUpForm = () => {
           url: `${usebaseUrl()}/api/auth/signup`,
           data: formData,
         });
-
+        console.log(response.data)
         if (response.data.success) {
           dispatch(setUserInfo(response.data.data));
           localStorage("validationToken", response.data.token);
           setFormData({
             email: "",
             password: "",
+            userName: "",
+            fullName: "",
           });
           toast.success(response.data.message);
           navigate("/");
@@ -67,7 +71,7 @@ const SignUpForm = () => {
         // console.log(response)
       } catch (error) {
         toast.error(error.response.data.message);
-        console.log("error in LoginForm -> handleLogin", error);
+        console.log("error in signUpForm -> handleSignup", error);
       }
     }
   };

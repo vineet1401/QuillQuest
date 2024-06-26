@@ -52,7 +52,6 @@ export default function Navbar() {
     { name: "Blog", to: "/blog/all" },
   ];
 
-
   useEffect(() => {
     const getUserData = async () => {
       const response = await axios.request({
@@ -79,8 +78,11 @@ export default function Navbar() {
                 <div className="">
                   <img
                     className="h-8 w-8"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                    alt="Your Company"
+                    src={
+                      userInfo.imageUrl
+                        ? `D:/QuillQuest/server/uploads/${userInfo.imageUrl}`
+                        : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSheI9UkWllIpSNbs2UdE18KLLswgDON9qzXg&s"
+                    }
                   />
                 </div>
                 <div className="hidden md:block ml-10 items-baseline space-x-4">
@@ -124,8 +126,9 @@ export default function Navbar() {
                           <img
                             className="h-8 w-8 rounded-full"
                             src={
-                              userInfo.imageUrl ||
-                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSheI9UkWllIpSNbs2UdE18KLLswgDON9qzXg&s"
+                              userInfo.imageUrl
+                                ? `D:/QuillQuest/server/uploads/${userInfo.imageUrl}`
+                                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSheI9UkWllIpSNbs2UdE18KLLswgDON9qzXg&s"
                             }
                             alt=""
                           />
@@ -140,24 +143,24 @@ export default function Navbar() {
                           leaveTo="transform opacity-0 scale-95"
                         >
                           <MenuItems className="absolute right-0 z-30 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                          <NavLink
-                                key="Dashboard"
-                                to={"/dashboard"}
-                                className={
-                                  "block text-gray-900 w-full hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                                }
-                              >
-                                Dashboard
-                              </NavLink>
-                              <button
-                                key="Profile"
-                                className={
-                                  "block text-gray-900 w-full text-left hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                                }
-                                onClick={() => toggleProfileModal(true)}
-                              >
-                                Profile
-                              </button>
+                            <NavLink
+                              key="Dashboard"
+                              to={"/dashboard"}
+                              className={
+                                "block text-gray-900 w-full hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                              }
+                            >
+                              Dashboard
+                            </NavLink>
+                            <button
+                              key="Profile"
+                              className={
+                                "block text-gray-900 w-full text-left hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                              }
+                              onClick={() => toggleProfileModal(true)}
+                            >
+                              Profile
+                            </button>
                             <button
                               className={
                                 "block text-gray-900 w-full text-left hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
@@ -166,7 +169,6 @@ export default function Navbar() {
                             >
                               Logout
                             </button>
-
                           </MenuItems>
                         </Transition>
                       </Menu>
@@ -176,7 +178,7 @@ export default function Navbar() {
                       className={
                         "bg-indigo-800 mx-3 text-white rounded-md px-3 py-2 text-sm font-medium"
                       }
-                      to ="/login"
+                      to="/login"
                     >
                       Login
                     </NavLink>
@@ -212,72 +214,74 @@ export default function Navbar() {
               ))}
             </div>
             {userInfo._id ? (
-                    <>
-                      <Menu as="div" className="relative mr-3">
-                        <MenuButton className="relative max-w-xs items-center rounded-full bg-gray-800 text-sm   ring-2 ring-offset-2 ring-offset-gray-800">
-                          <img
-                            className="h-8 w-8 rounded-full"
-                            src={
-                              userInfo.imageUrl ||
-                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSheI9UkWllIpSNbs2UdE18KLLswgDON9qzXg&s"
-                            }
-                            alt=""
-                          />
-                        </MenuButton>
-
-                        <Transition
-                          enter="transition ease-out duration-100"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
-                        >
-                          <MenuItems className="absolute right-0 z-30 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                              <NavLink
-                                key="Dashboard"
-                                to={"/dashboard"}
-                                className={
-                                  "block text-gray-900 w-full hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                                }
-                              >
-                                Dashboard
-                              </NavLink>
-                              <button
-                                key="Profile"
-                                className={
-                                  "block text-gray-900 w-full text-right hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                                }
-                                onClick={() => toggleProfileModal(true)}
-                              >
-                                Profile
-                              </button>
-                            <button
-                              className={
-                                "block text-gray-900 w-full text-right hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                              }
-                              onClick={logoutHandler}
-                            >
-                              Logout
-                            </button>
-                          </MenuItems>
-                        </Transition>
-                      </Menu>
-                    </>
-                  ) : (
-                    <NavLink
-                      className={
-                        "bg-indigo-800 mx-3 text-white rounded-md px-3 py-2 text-sm font-medium"
+              <>
+                <Menu as="div" className="relative mr-3">
+                  <MenuButton className="relative max-w-xs items-center rounded-full bg-gray-800 text-sm   ring-2 ring-offset-2 ring-offset-gray-800">
+                    <img
+                      className="h-8 w-8 rounded-full"
+                      src={
+                        userInfo.imageUrl ||
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSheI9UkWllIpSNbs2UdE18KLLswgDON9qzXg&s"
                       }
-                      to ="/login"
-                    >
-                      Login
-                    </NavLink>
-                  )}
+                      alt=""
+                    />
+                  </MenuButton>
 
+                  <Transition
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <MenuItems className="absolute right-0 z-30 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <NavLink
+                        key="Dashboard"
+                        to={"/dashboard"}
+                        className={
+                          "block text-gray-900 w-full hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                        }
+                      >
+                        Dashboard
+                      </NavLink>
+                      <button
+                        key="Profile"
+                        className={
+                          "block text-gray-900 w-full text-right hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                        }
+                        onClick={() => toggleProfileModal(true)}
+                      >
+                        Profile
+                      </button>
+                      <button
+                        className={
+                          "block text-gray-900 w-full text-right hover:bg-indigo-400 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                        }
+                        onClick={logoutHandler}
+                      >
+                        Logout
+                      </button>
+                    </MenuItems>
+                  </Transition>
+                </Menu>
+              </>
+            ) : (
+              <NavLink
+                className={
+                  "bg-indigo-800 mx-3 text-white rounded-md px-3 py-2 text-sm font-medium"
+                }
+                to="/login"
+              >
+                Login
+              </NavLink>
+            )}
           </DisclosurePanel>
 
-          < Profile profileModal={profileModal} toggleProfileModal={toggleProfileModal} />
+          <Profile
+            profileModal={profileModal}
+            toggleProfileModal={toggleProfileModal}
+          />
         </>
       )}
     </Disclosure>

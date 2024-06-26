@@ -12,7 +12,8 @@ const ContentDiv = ({ posts }) => {
             className="flex flex-col sm:flex-row   gap-4 p-3 shadow-lg"
           >
             <div className=" flex items-center justify-center  ">
-              <img src={post.image} alt="" className="rounded-lg max-h-48" />
+              <img src="https://demos.creative-tim.com/material-kit-pro/assets/img/examples/blog2.jpg" alt="" className="rounded-lg max-h-48" />
+              {/* <img src={post.coverPhoto} alt="" className="rounded-lg max-h-48" /> */}
             </div>
             <div>
               <article

@@ -12,36 +12,38 @@ import { setUserInfo } from "../store/userSlice/userSlice";
 import { toast } from "react-toastify";
 
 export default function Profile({ profileModal, toggleProfileModal }) {
-
- const userInfo = useSelector(state => state.user.userInfo)
- const dispatch = useDispatch();
+  const userInfo = useSelector((state) => state.user.userInfo);
+  const dispatch = useDispatch();
 
   const [isEditing, setIsEditing] = useState(false);
   const [currentUserInfo, setCurrentUserInfo] = useState({});
 
-  const submitForm = async() => {
-    if(Object.keys(currentUserInfo).length == 0) return toast.warn("No Field to Update")
+  const submitForm = async () => {
+    if (Object.keys(currentUserInfo).length == 0)
+      return toast.warn("No Field to Update");
+
     try {
       const response = await axios.request({
         method: "POST",
         url: `${usebaseUrl()}/api/user/update-profile`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("validationToken")}`,
+          "Content-Type" : "multipart/form-data",
         },
-        data : currentUserInfo
+        data: currentUserInfo,
       });
-      if(response.data.success){
+      if (response.data.success) {
         dispatch(setUserInfo(currentUserInfo));
         toast.success(response.data.message);
-        setCurrentUserInfo({})
-      }else{
+        setCurrentUserInfo({});
+      } else {
         toast.error(response.data.message);
       }
-    }catch(e) {
-      toast.error(e.response.data.message)
+    } catch (e) {
+      toast.error(e.response.data.message);
       console.log("Error in Profile->submitForm", e);
     }
-  }
+  };
   // useEffect(()=> {
   //   setCurrentUserInfo(userInfo);
   // }, [profileModal])
@@ -87,16 +89,27 @@ export default function Profile({ profileModal, toggleProfileModal }) {
                         </label>
                         <div className="mt-2">
                           <input
-                          readOnly = { isEditing ? false : true}
+                            readOnly={isEditing ? false : true}
                             type="text"
-                            value={currentUserInfo.fullName ? currentUserInfo.fullName : userInfo.fullName }
-                            onChange={(e) => setCurrentUserInfo(prev => (
-                              {...prev, [e.target.name]:e.target.value}
-                            )) }
+                            value={
+                              currentUserInfo.fullName
+                                ? currentUserInfo.fullName
+                                : userInfo.fullName
+                            }
+                            onChange={(e) =>
+                              setCurrentUserInfo((prev) => ({
+                                ...prev,
+                                [e.target.name]: e.target.value,
+                              }))
+                            }
                             name="fullName"
                             id="fullName"
                             autoComplete="fullName"
-                            className= {!isEditing ? "block w-full rounded-md border-0 py-1.5 pl-2 outline-none" : "block w-full rounded-md border-0 py-1.5  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 pl-2 sm:text-sm sm:leading-6"}
+                            className={
+                              !isEditing
+                                ? "block w-full rounded-md border-0 py-1.5 pl-2 outline-none"
+                                : "block w-full rounded-md border-0 py-1.5  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 pl-2 sm:text-sm sm:leading-6"
+                            }
                           />
                         </div>
                       </div>
@@ -107,16 +120,27 @@ export default function Profile({ profileModal, toggleProfileModal }) {
                         </label>
                         <div className="mt-2">
                           <input
-                          readOnly = { isEditing ? false : true}
+                            readOnly={isEditing ? false : true}
                             type="text"
-                            value={currentUserInfo.userName ? currentUserInfo.userName : userInfo.userName}
-                            onChange={(e) => setCurrentUserInfo(prev => (
-                              {...prev, [e.target.name]:e.target.value}
-                            )) }
+                            value={
+                              currentUserInfo.userName
+                                ? currentUserInfo.userName
+                                : userInfo.userName
+                            }
+                            onChange={(e) =>
+                              setCurrentUserInfo((prev) => ({
+                                ...prev,
+                                [e.target.name]: e.target.value,
+                              }))
+                            }
                             name="userName"
                             id="userName"
                             autoComplete="userName"
-                            className= {!isEditing ? "block w-full rounded-md border-0 py-1.5 pl-2 outline-none" : "block w-full rounded-md border-0 py-1.5  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 pl-2 sm:text-sm sm:leading-6"}
+                            className={
+                              !isEditing
+                                ? "block w-full rounded-md border-0 py-1.5 pl-2 outline-none"
+                                : "block w-full rounded-md border-0 py-1.5  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 pl-2 sm:text-sm sm:leading-6"
+                            }
                           />
                         </div>
                       </div>
@@ -127,16 +151,27 @@ export default function Profile({ profileModal, toggleProfileModal }) {
                         </label>
                         <div className="mt-2">
                           <input
-                          readOnly = { isEditing ? false : true}
+                            readOnly={isEditing ? false : true}
                             id="email"
                             name="email"
-                            value={currentUserInfo.email ? currentUserInfo.email : userInfo.email}
-                            onChange={(e) => setCurrentUserInfo(prev => (
-                              {...prev, [e.target.name]:e.target.value}
-                            )) }
+                            value={
+                              currentUserInfo.email
+                                ? currentUserInfo.email
+                                : userInfo.email
+                            }
+                            onChange={(e) =>
+                              setCurrentUserInfo((prev) => ({
+                                ...prev,
+                                [e.target.name]: e.target.value,
+                              }))
+                            }
                             type="email"
                             autoComplete="email"
-                            className= {!isEditing ? "block w-full rounded-md border-0 py-1.5 pl-2 outline-none" : "block w-full rounded-md border-0 py-1.5  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 pl-2 sm:text-sm sm:leading-6"}
+                            className={
+                              !isEditing
+                                ? "block w-full rounded-md border-0 py-1.5 pl-2 outline-none"
+                                : "block w-full rounded-md border-0 py-1.5  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 pl-2 sm:text-sm sm:leading-6"
+                            }
                           />
                         </div>
                       </div>
@@ -148,14 +183,25 @@ export default function Profile({ profileModal, toggleProfileModal }) {
                         <div className="mt-2">
                           <textarea
                             id="about"
-                            readOnly = { isEditing ? false : true}
-                            value={currentUserInfo.about ? currentUserInfo.about : userInfo.about}
-                            onChange={(e) => setCurrentUserInfo(prev => (
-                              {...prev, [e.target.name]:e.target.value}
-                            )) }
+                            readOnly={isEditing ? false : true}
+                            value={
+                              currentUserInfo.about
+                                ? currentUserInfo.about
+                                : userInfo.about
+                            }
+                            onChange={(e) =>
+                              setCurrentUserInfo((prev) => ({
+                                ...prev,
+                                [e.target.name]: e.target.value,
+                              }))
+                            }
                             name="about"
                             rows={3}
-                            className= {!isEditing ? "block w-full rounded-md border-0 py-1.5 pl-2 outline-none" : "block w-full rounded-md border-0 py-1.5  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 pl-2 sm:text-sm sm:leading-6"}
+                            className={
+                              !isEditing
+                                ? "block w-full rounded-md border-0 py-1.5 pl-2 outline-none"
+                                : "block w-full rounded-md border-0 py-1.5  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 pl-2 sm:text-sm sm:leading-6"
+                            }
                             defaultValue={""}
                           />
                         </div>
@@ -170,20 +216,30 @@ export default function Profile({ profileModal, toggleProfileModal }) {
                         </label>
                         <div className="mt-2">
                           <input
-                          readOnly = { isEditing ? false : true}
-                          value={currentUserInfo.role ? currentUserInfo.role : userInfo.role}
-                          onChange={(e) => setCurrentUserInfo(prev => (
-                            {...prev, [e.target.name]:e.target.value}
-                          )) }
+                            readOnly={isEditing ? false : true}
+                            value={
+                              currentUserInfo.role
+                                ? currentUserInfo.role
+                                : userInfo.role
+                            }
+                            onChange={(e) =>
+                              setCurrentUserInfo((prev) => ({
+                                ...prev,
+                                [e.target.name]: e.target.value,
+                              }))
+                            }
                             type="text"
                             name="role"
                             id="role"
                             autoComplete="role"
-                            className= {!isEditing ? "block w-full rounded-md border-0 py-1.5 pl-2 outline-none" : "block w-full rounded-md border-0 py-1.5  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 pl-2 sm:text-sm sm:leading-6"}
+                            className={
+                              !isEditing
+                                ? "block w-full rounded-md border-0 py-1.5 pl-2 outline-none"
+                                : "block w-full rounded-md border-0 py-1.5  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 pl-2 sm:text-sm sm:leading-6"
+                            }
                           />
                         </div>
                       </div>
-
 
                       <div className="col-span-full">
                         <label className="block text-sm font-medium leading-6 text-gray-900">
@@ -193,22 +249,30 @@ export default function Profile({ profileModal, toggleProfileModal }) {
                           <div className="flex">
                             <img
                               className="h-12 w-12 me-4 text-gray-300"
-                              src={userInfo.imageUrl}
+                              src={
+                                currentUserInfo.imageUrl
+                                  ? URL.createObjectURL(currentUserInfo.imageUrl)
+                                  : userInfo.imageUrl 
+                              }
                             />
                             <button
                               type="button"
                               className="rounded-md bg-white px-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                             >
-                              <label className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                                <span>Change</span>
-                                <input
-                                readOnly = { isEditing ? false : true}
-                                  id="file-upload"
-                                  name="file-upload"
-                                  type="file"
-                                  className="sr-only"
-                                />
-                              </label>
+                              <input
+                                className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                                disabled={isEditing ? false : true}
+                                accept=".jpg, .png, .jpeg"
+                                id="file-upload"
+                                name="imageUrl"
+                                type="file"
+                                onChange={(e) =>
+                                  setCurrentUserInfo((prev) => ({
+                                    ...prev,
+                                    [e.target.name]: e.target.files[0],
+                                  }))
+                                }
+                              />
                             </button>
                           </div>
 
@@ -223,11 +287,14 @@ export default function Profile({ profileModal, toggleProfileModal }) {
                             <button
                               type="button"
                               onClick={() => {
-                                setIsEditing(prev => !prev)
-                                isEditing && submitForm()
-
+                                setIsEditing((prev) => !prev);
+                                isEditing && submitForm();
                               }}
-                              className={`rounded-md ${isEditing ? "bg-green-600" : "bg-indigo-600"} px-3 py-2 text-sm font-semibold text-white shadow-sm hover:${isEditing ? "bg-green-500" : "bg-indigo-500"}`}
+                              className={`rounded-md ${
+                                isEditing ? "bg-green-600" : "bg-indigo-600"
+                              } px-3 py-2 text-sm font-semibold text-white shadow-sm hover:${
+                                isEditing ? "bg-green-500" : "bg-indigo-500"
+                              }`}
                             >
                               {isEditing ? "Save" : "Edit"}
                             </button>

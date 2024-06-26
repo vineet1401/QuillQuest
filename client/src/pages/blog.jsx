@@ -4,118 +4,123 @@ import CategoryBar from "../components/CategoryBar";
 import ContentDiv from "../components/ContentDiv";
 import Pagination from "../components/Pagination";
 import PublishBlogButton from "../components/PublishBlogButton";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { toast } from "react-toastify";
+import usebaseUrl from "../hooks/usebaseUrl";
 
-const posts = [
-  {
-    id: 1,
-    title: "Boost your conversion rate",
-    to: "/blog/all/2",
-    description:
-      "Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.",
-    date: "Mar 16, 2020",
-    datetime: "2020-03-16",
-    category: { title: "Marketing", to: "/blog/all/2" },
-    image: "https://demos.creative-tim.com/material-kit-pro/assets/img/examples/blog2.jpg",
-    author: {
-      name: "Michael Foster",
-      role: "Co-Founder / CTO",
-      to: "/blog/all/2",
-      imageUrl:
-        "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-  },
-  {
-    id: 1,
-    title: "Boost your conversion rate",
-    to: "/blog/all/2",
-    description:
-      "Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.",
-    date: "Mar 16, 2020",
-    datetime: "2020-03-16",
-    category: { title: "Marketing", to: "/blog/all/2" },
-    image: "https://demos.creative-tim.com/material-kit-pro/assets/img/examples/blog2.jpg",
-    author: {
-      name: "Michael Foster",
-      role: "Co-Founder / CTO",
-      to: "/blog/all/2",
-      imageUrl:
-        "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-  },
-  {
-    id: 1,
-    title: "Boost your conversion rate",
-    to: "/blog/all/2",
-    description:
-      "Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.",
-    date: "Mar 16, 2020",
-    datetime: "2020-03-16",
-    category: { title: "Marketing", to: "/blog/all/2" },
-    image: "https://demos.creative-tim.com/material-kit-pro/assets/img/examples/blog2.jpg",
-    author: {
-      name: "Michael Foster",
-      role: "Co-Founder / CTO",
-      to: "/blog/all/2",
-      imageUrl:
-        "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-  },
-  {
-    id: 1,
-    title: "Boost your conversion rate",
-    to: "/blog/all/2",
-    description:
-      "Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.",
-    date: "Mar 16, 2020",
-    datetime: "2020-03-16",
-    category: { title: "Marketing", to: "/blog/all/2" },
-    image: "https://demos.creative-tim.com/material-kit-pro/assets/img/examples/blog2.jpg",
-    author: {
-      name: "Michael Foster",
-      role: "Co-Founder / CTO",
-      to: "/blog/all/2",
-      imageUrl:
-        "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-  },
-  {
-    id: 1,
-    title: "Boost your conversion rate",
-    to: "/blog/all/2",
-    description:
-      "Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.",
-    date: "Mar 16, 2020",
-    datetime: "2020-03-16",
-    category: { title: "Marketing", to: "/blog/all/2" },
-    image: "https://demos.creative-tim.com/material-kit-pro/assets/img/examples/blog2.jpg",
-    author: {
-      name: "Michael Foster",
-      role: "Co-Founder / CTO",
-      to: "/blog/all/2",
-      imageUrl:
-        "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-  },
-  {
-    id: 1,
-    title: "Boost your conversion rate",
-    to: "/blog/all/2",
-    description:
-      "Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.",
-    date: "Mar 16, 2020",
-    datetime: "2020-03-16",
-    category: { title: "Marketing", to: "/blog/all/2" },
-    image: "https://demos.creative-tim.com/material-kit-pro/assets/img/examples/blog2.jpg",
-    author: {
-      name: "Michael Foster",
-      role: "Co-Founder / CTO",
-      to: "/blog/all/2",
-      imageUrl:
-        "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-  },
-  // More posts...
-];
+// const posts = [
+//   {
+//     id: 1,
+//     title: "Boost your conversion rate",
+//     to: "/blog/all/2",
+//     description:
+//       "Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.",
+//     date: "Mar 16, 2020",
+//     datetime: "2020-03-16",
+//     category: { title: "Marketing", to: "/blog/all/2" },
+//     image: "https://demos.creative-tim.com/material-kit-pro/assets/img/examples/blog2.jpg",
+//     author: {
+//       name: "Michael Foster",
+//       role: "Co-Founder / CTO",
+//       to: "/blog/all/2",
+//       imageUrl:
+//         "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//     },
+//   },
+//   {
+//     id: 1,
+//     title: "Boost your conversion rate",
+//     to: "/blog/all/2",
+//     description:
+//       "Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.",
+//     date: "Mar 16, 2020",
+//     datetime: "2020-03-16",
+//     category: { title: "Marketing", to: "/blog/all/2" },
+//     image: "https://demos.creative-tim.com/material-kit-pro/assets/img/examples/blog2.jpg",
+//     author: {
+//       name: "Michael Foster",
+//       role: "Co-Founder / CTO",
+//       to: "/blog/all/2",
+//       imageUrl:
+//         "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//     },
+//   },
+//   {
+//     id: 1,
+//     title: "Boost your conversion rate",
+//     to: "/blog/all/2",
+//     description:
+//       "Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.",
+//     date: "Mar 16, 2020",
+//     datetime: "2020-03-16",
+//     category: { title: "Marketing", to: "/blog/all/2" },
+//     image: "https://demos.creative-tim.com/material-kit-pro/assets/img/examples/blog2.jpg",
+//     author: {
+//       name: "Michael Foster",
+//       role: "Co-Founder / CTO",
+//       to: "/blog/all/2",
+//       imageUrl:
+//         "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//     },
+//   },
+//   {
+//     id: 1,
+//     title: "Boost your conversion rate",
+//     to: "/blog/all/2",
+//     description:
+//       "Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.",
+//     date: "Mar 16, 2020",
+//     datetime: "2020-03-16",
+//     category: { title: "Marketing", to: "/blog/all/2" },
+//     image: "https://demos.creative-tim.com/material-kit-pro/assets/img/examples/blog2.jpg",
+//     author: {
+//       name: "Michael Foster",
+//       role: "Co-Founder / CTO",
+//       to: "/blog/all/2",
+//       imageUrl:
+//         "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//     },
+//   },
+//   {
+//     id: 1,
+//     title: "Boost your conversion rate",
+//     to: "/blog/all/2",
+//     description:
+//       "Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.",
+//     date: "Mar 16, 2020",
+//     datetime: "2020-03-16",
+//     category: { title: "Marketing", to: "/blog/all/2" },
+//     image: "https://demos.creative-tim.com/material-kit-pro/assets/img/examples/blog2.jpg",
+//     author: {
+//       name: "Michael Foster",
+//       role: "Co-Founder / CTO",
+//       to: "/blog/all/2",
+//       imageUrl:
+//         "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//     },
+//   },
+//   {
+//     id: 1,
+//     title: "Boost your conversion rate",
+//     to: "/blog/all/2",
+//     description:
+//       "Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.",
+//     date: "Mar 16, 2020",
+//     datetime: "2020-03-16",
+//     category: { title: "Marketing", to: "/blog/all/2" },
+//     image: "https://demos.creative-tim.com/material-kit-pro/assets/img/examples/blog2.jpg",
+//     author: {
+//       name: "Michael Foster",
+//       role: "Co-Founder / CTO",
+//       to: "/blog/all/2",
+//       imageUrl:
+//         "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+//     },
+//   },
+//   // More posts...
+// ];
 const category = [
   { name: "History", to: "/blog/history" },
   { name: "General Knowledge", to: "/blog/general-knowledge" },
@@ -126,7 +131,26 @@ const category = [
 
 const Blog = () => {
   const { categoryName } = useParams();
-  console.log("category", categoryName);
+  const userInfo = useSelector((state) => state.user.userInfo);
+
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchAllBlogs = async () => {
+      const response = await axios.request({
+        method: "GET",
+        url: `${usebaseUrl()}/api/blog/fetchAllBlog`,
+      });
+      if (response.data.success) {
+        console.log("blogs", response.data.data);
+        setPosts(response.data.data);
+      } else {
+        toast.error(response.data.message);
+      }
+    };
+    fetchAllBlogs();
+  }, []);
+
   return (
     <div className=" px-2  py-6 dark:bg-gray-900 bg-white">
       {/* Your content */}
@@ -141,7 +165,7 @@ const Blog = () => {
             // src="https://demos.creative-tim.com/material-kit-pro/assets/img/examples/blog2.jpg"
             alt=""
           />
-          <PublishBlogButton />
+          {userInfo._id && <PublishBlogButton />}
         </div>
         <CategoryBar category={category} />
       </div>
@@ -155,7 +179,6 @@ const Blog = () => {
         </div>
         <Pagination />
       </section>
-      
     </div>
   );
 };
